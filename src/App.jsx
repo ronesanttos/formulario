@@ -7,9 +7,25 @@ import UserForm from './components/UserForm'
 import Steps from './components/Steps'
 
 import { userForm } from './hooks/userForm'
+import { useState } from 'react'
+
+const formTemplate = {
+  name: "",
+  email: "",
+  review: "",
+  comment: "",
+}
 
 function App() {
-  const formComponets = [<UserForm />, <Thanks />, <ReviewForm />]
+  const [data, setData] = useState(formTemplate)
+
+  const upadetedFiel = (key, value) => {
+    setData((prev) => {
+      return { ...prev, [key]: value }
+    })
+  }
+
+  const formComponets = [<UserForm data={data} upadetedFiel={upadetedFiel} />, <ReviewForm data={data} upadetedFiel={upadetedFiel} />, <Thanks data={data} />]
 
   const { currentStep, currentComponent, changeStep, isLastStep, isFirsStep } = userForm(formComponets)
   return (
@@ -20,7 +36,7 @@ function App() {
       </div>
 
       <div className="form-container">
-        <Steps currentStep={currentStep}/>
+        <Steps currentStep={currentStep} />
         <form onSubmit={(e) => changeStep(currentStep + 1, e)}>
           <div className="inputs-container">
             {currentComponent}
